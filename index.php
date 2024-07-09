@@ -56,6 +56,7 @@
                 // Tarif Konfigurationen
                 $rateBundleID   = 5198834930;
                 $TermID         = 5198840140;
+                $creditCardToken= "";
 
 
                 echo "Tenant: " . $tenant . "<br>";
@@ -73,6 +74,9 @@
                     'countryCode' => $studioData['address']['countryCode'],
                     'locale' => 'de_DE',
                 ];
+                echo "<div style='display:none;'>";
+                var_dump($post);
+                echo "</div>";
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL,"https://".$tenant.".api.magicline.com/connect/v2/creditcard/tokenization/payment-methods");
                 curl_setopt($ch, CURLOPT_POST, 1);
@@ -96,7 +100,7 @@
 
                 $data = array();
                 $data = [
-                    'studioId' => $studioID,
+                    'studioId' => $studioid,
                     'contract' => array(
                         'rateBundleTermId'  => $TermID,
                         'startDate'         => date('Y-m-d')
