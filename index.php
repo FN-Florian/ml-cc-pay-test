@@ -68,33 +68,12 @@
                 echo "
                 <br><br>
                 <h2>Kreditkarten Vertragsabschluss - ".$studioData['studioName']."</h2>";
+                                
+                $paymentMethods = file_get_contents('https://'.$tenant.'.api.magicline.com/connect/v2/creditcard/tokenization/payment-methods?studioId='.$studioid.'&countryCode='.$studioData['address']['countryCodeAlpha2'].'&locale=de_DE');
+                $paymentMethodsData = json_decode($paymentMethods, true);
 
-                $post = [
-                    'studioId' => $studioid,
-                    'countryCode' => $studioData['address']['countryCodeAlpha2'],
-                    'locale' => 'de_DE',
-                ];
-                echo "<div style='display:none;'>";
-                var_dump($post);
-                echo "</div>";
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL,"https://".$tenant.".api.magicline.com/connect/v2/creditcard/tokenization/payment-methods");
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                var_dump($paymentMethodsData);
 
-                // Receive server response ...
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-                $server_output = curl_exec($ch);
-
-                curl_close($ch);
-
-                $ResultArray = json_decode($server_output);
-                $ResultArray = json_decode(json_encode($ResultArray), true);
-
-                var_dump($ResultArray);
-                //
 
 
 
