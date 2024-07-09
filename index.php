@@ -61,12 +61,37 @@
                 echo "Tenant: " . $tenant . "<br>";
                 echo "Studio ID: " . $studioid . "<br>";
 
-                $studioInfo = file_get_contents('https://rsg-group.api.magicline.com/connect/v2/studio/'.$studioid);
+                $studioInfo = file_get_contents('https://'.$tenant.'.api.magicline.com/connect/v2/studio/'.$studioid);
                 $studioData = json_decode($studioInfo, true);
 
                 echo "
                 <br><br>
                 <h2>Kreditkarten Vertragsabschluss - ".$studioData['studioName']."</h2>";
+
+                $post = [
+                    'studioId' => $studioid,
+                    'countryCode' => $studioData['address']['countryCode'],
+                    'locale' => 'de_DE',
+                ];
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL,"https://".$tenant.".api.magicline.com/connect/v2/creditcard/tokenization/payment-methods");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+                // Receive server response ...
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $server_output = curl_exec($ch);
+
+                curl_close($ch);
+
+                $ResultArray = json_decode($server_output);
+                $ResultArray = json_decode(json_encode($ResultArray), true);
+
+                var_dump($ResultArray);
+
+
 
 
                 $data = array();
