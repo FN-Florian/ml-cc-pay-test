@@ -115,6 +115,7 @@
                     {
                         const configuration = {
                             paymentMethodsResponse: response,
+                            clientKey,
                             locale: 'de_DE',
                             environment: 'live',
                             showPayButton: true,
