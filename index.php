@@ -103,71 +103,50 @@
                 ];
                 
                 ?>
-                <div id='component-container' onload="handlePaymentMethodsResponse('<?php echo $paymentMethodsData['paymentMethodsJson']; ?>')"></div>
+                <div id='component-container'></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const paymentMethodsResponse = <?php echo json_encode($paymentMethodsData); ?>;
+                        handlePaymentMethodsResponse(paymentMethodsResponse);
+                    });
 
+                    
+                    function handlePaymentMethodsResponse(response) 
+                    {
+                        const configuration = {
+                            paymentMethodsResponse: response,
+                            clientKey,
+                            locale: 'de_DE',
+                            environment: 'live',
+                            showPayButton: true,
+                            paymentMethodsConfiguration: {
+                                card: {
+                                    hasHolderName: true,
+                                    holderNameRequired: true,
+                                    name: 'Credit or debit card',
+                                    amount: {
+                                        value: 0,
+                                        currency: '<?php echo $studioData['currencyCode'] ?>'
+                                    }
+                                }
+                            },
+                            onSubmit: (state, component) => {
+                                submit(state, component);
+                            },
+                            onAdditionalDetails: (state, component) => {
+                                additionalDetails(state, component);
+                            }
+                        };
+                        const checkout = new AdyenCheckout(configuration);
+                        checkout.create('card').mount('#component-container');
+                    }
+                </script>
 
 
                 <?php
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
 
             ?>
-
-
-
-
-
-
-            <script>
-            function handlePaymentMethodsResponse(response) 
-            {
-                const configuration = {
-                    paymentMethodsResponse: response,
-                    clientKey,
-                    locale: 'de_DE',
-                    environment: 'live',
-                    showPayButton: true,
-                    paymentMethodsConfiguration: {
-                        card: {
-                            hasHolderName: true,
-                            holderNameRequired: true,
-                            name: 'Credit or debit card',
-                            amount: {
-                                value: 0,
-                                currency: '<?php echo $studioData['currencyCode'] ?>'
-                            }
-                        }
-                    },
-                    onSubmit: (state, component) => {
-                        submit(state, component);
-                    },
-                    onAdditionalDetails: (state, component) => {
-                        additionalDetails(state, component);
-                    }
-                };
-                const checkout = new AdyenCheckout(configuration);
-                checkout.create('card').mount('#component-container');
-            }
-
-            </script>
 
 
             <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.5.0/adyen.js"
