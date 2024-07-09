@@ -71,7 +71,7 @@
 
                 $post = [
                     'studioId' => $studioid,
-                    'countryCode' => $studioData['address']['countryCode'],
+                    'countryCode' => $studioData['address']['countryCodeAlpha2'],
                     'locale' => 'de_DE',
                 ];
                 echo "<div style='display:none;'>";
