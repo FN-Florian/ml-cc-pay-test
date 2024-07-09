@@ -102,16 +102,12 @@
                         )
                 ];
                 
-
-                echo"
-
-                <div id='component-container'></div>
-
-                ";
+                ?>
+                <div id='component-container' onload="handlePaymentMethodsResponse('<?php echo $paymentMethodsData['paymentMethodsJson']; ?>')"></div>
 
 
 
-
+                <?php
 
 
 
@@ -145,7 +141,7 @@
             {
                 const configuration = {
                     paymentMethodsResponse: response,
-                    clientKey: 'YOUR_CLIENT_KEY',
+                    clientKey,
                     locale: 'de_DE',
                     environment: 'live',
                     showPayButton: true,
@@ -156,7 +152,7 @@
                             name: 'Credit or debit card',
                             amount: {
                                 value: 0,
-                                currency: 'EUR'
+                                currency: '<?php echo $studioData['currencyCode'] ?>'
                             }
                         }
                     },
