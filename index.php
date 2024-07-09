@@ -53,8 +53,76 @@
             }
             else
             {
+                // Tarif Konfigurationen
+                $rateBundleID   = 5198834930;
+                $TermID         = 5198840140;
+
+
                 echo "Tenant: " . $tenant . "<br>";
                 echo "Studio ID: " . $studioid . "<br>";
+
+                $studioInfo = file_get_contents('https://rsg-group.api.magicline.com/connect/v2/studio/'.$studioid);
+                $studioData = json_decode($studioInfo, true);
+
+                echo "
+                <br><br>
+                <h2>Kreditkarten Vertragsabschluss - ".$studioData['studioName']."</h2>";
+
+
+                $data = array();
+                $data = [
+                    'studioId' => $studioID,
+                    'contract' => array(
+                        'rateBundleTermId'  => $TermID,
+                        'startDate'         => date('Y-m-d')
+                        ),
+                    'customer' => array(
+                        'firstname'     => 'Max',
+                        'lastname'      => 'Mustermann',
+                        'dateOfBirth'   => '1990-01-01',
+                        'email'         => 'ninow@ronmiller.de',
+                        'street'        => 'Musterstrasse',
+                        'houseNumber'   => '1',
+                        'city'          => 'Musterstadt',
+                        'zipCode'       => '12345',
+                        'countryCode'   => 'DE',
+                        'paymentChoice' => 'CREDIT_CARD',
+                        'telephone_mobile'=> '0123456789',
+                        'creditCard' => array(
+                            'tokenizationReference' => $creditCardToken
+                            )
+                        )
+                ];
+                
+
+                echo"
+
+                <div id='component-container'></div>
+
+                ";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
             ?>
