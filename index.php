@@ -29,6 +29,15 @@
                 $studioid = 0;
             }
 
+            if(isset($_ENV['ADYEN_CLIENT_KEY']))
+            {
+                $clientKey = $_ENV['ADYEN_CLIENT_KEY'];
+            }
+            else
+            {
+                $clientKey = "";
+            }
+
 
 
 
@@ -115,7 +124,7 @@
                     {
                         const configuration = {
                             paymentMethodsResponse: response,
-                            clientKey,
+                            clientKey: '<?php echo $clientKey ?>',
                             locale: 'de_DE',
                             environment: 'live',
                             showPayButton: true,
