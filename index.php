@@ -149,6 +149,77 @@
                         const checkout = new AdyenCheckout(configuration);
                         checkout.create('card').mount('#component-container');
                     }
+
+                    function submit(state, component) {
+                        if (state.isValid) {
+                            const postData = {
+                                paymentMethod: state.data.paymentMethod,
+                                browserInfo: state.data.browserInfo,
+                                studioId: <?php echo $studioid ?>,
+                                returnUrl: "https://ml-cc-pay-test.ninow.eu/index.php?tenant=<?php echo $tenant; ?>&studioid=<?php echo $studioid ?>",
+                                origin: window.location.origin
+                            }
+                            post("https://<?php echo $tenant; ?>.api.magicline.com/connect/v1/creditcard/tokenization/initiate", postData, function(data, status) {
+                                handleInitiateResponse(data, status, component);
+                            });
+                        }
+                    }
+
+                    function additionalDetails(data, component) {
+                        // Depending on the authentication:
+                        // fill threeDSResult (authentication took place on your site)
+                        // or fill redirectResult (authentication via redirect)
+                        const postData = {
+                            threeDSResult: data.data.details.threeDSResult,
+                            redirectResult: null
+                        };
+                        post("https://<?php echo $tenant; ?>.api.magicline.com/connect/v1/creditcard/tokenization/"+tokenizationReference+"/complete", postData, function(response, status) {
+                            //handleCompleteResponse();
+                            const redirectData = {
+                                threeDSResult: data.data.details.threeDSResult,
+                                tokenizationReference: tokenizationReference
+                            };
+                            redirectToPhpPage(redirectData);
+                        });
+                    }
+
+                    function handleInitiateResponse(data, status, component) {
+                        tokenizationReference = data.reference;
+                        if (data.action) {
+                            if (response.action.type === "redirect") {
+                                storeCurrentState();
+                            }
+                            component.handleAction(data.action);
+                            const postData = {
+                                tokenizationReference: tokenizationReference
+                            };
+                            redirectToPhpPage(postData);
+                        }
+                    }
+
+
+
+                    function redirectToPhpPage(postData, targetUrl) {
+                        // Create a form element
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'https://ml-cc-pay-test.ninow.eu/response.php?tenant=<?php echo $tenant; ?>&studioid=<?php echo $studioid ?>';
+
+                        // Append data to the form
+                        for (const key in postData) {
+                            if (postData.hasOwnProperty(key)) {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = key;
+                                input.value = postData[key];
+                                form.appendChild(input);
+                            }
+                        }
+
+                        // Append the form to the body and submit it
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
                 </script>
 
 
