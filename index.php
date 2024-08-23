@@ -199,7 +199,7 @@
 
 
 
-                    function redirectToPhpPage(postData, targetUrl) {
+                    function redirectToPhpPage(postData) {
                         // Create a form element
                         const form = document.createElement('form');
                         form.method = 'POST';
